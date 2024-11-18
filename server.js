@@ -2,6 +2,7 @@ import express from "express";
 import nodemailer from "nodemailer";
 
 const app = express();
+const cors = require('cors');
 const port = 3000;
 
 // Read environment variables for email configuration
@@ -11,6 +12,11 @@ const emailPassword = process.env.VITE_EMAIL_PASSWORD;
 
 // Middleware to parse JSON request bodies
 app.use(express.json());
+
+// Allow requests from localhost:5173 (your frontend)
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 
 // Create a transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
