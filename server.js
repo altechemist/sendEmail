@@ -1,10 +1,10 @@
 import express from "express";
 import nodemailer from "nodemailer";
-require ("dotenv").config();
 
 const app = express();
 const port = 3000;
 
+// Read environment variables for email configuration
 const emailHost = process.env.VITE_EMAIL_HOST;
 const senderEmail = process.env.VITE_SENDER_EMAIL;
 const emailPassword = process.env.VITE_EMAIL_PASSWORD;
@@ -12,24 +12,29 @@ const emailPassword = process.env.VITE_EMAIL_PASSWORD;
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
-
 // Create a transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
-  host: emailHost,
-  port: 465,
+  host: emailHost, // Host for your SMTP server (e.g., 'smtp.gmail.com')
+  port: 465, // Port for SSL connection
   secure: true, // use SSL
   auth: {
-    user: senderEmail, // your Gmail address
-    pass: emailPassword, // your Gmail password or app-specific password
+    user: senderEmail, // Your email address (e.g., 'your-email@gmail.com')
+    pass: emailPassword, // Your app-specific password (or regular password if no 2FA)
   },
 });
 
 // Helper function to send confirmation email
-async function sendConfirmationEmail(email, name) {
+async function sendConfirmationEmail(
+  name,
+  email,
+  roomType,
+  checkInDate,
+  checkOutDate
+) {
   try {
     const mailOptions = {
       from: '"Luxe Hotel 🏨" <reservations@luxe-hotel.com>', // sender address
-      to: email, // list of receivers
+      to: email, // recipient address
       subject: "Reservation Confirmation ✔", // Subject line
       text:
         `Hello ${name},\n\nYour room reservation has been confirmed with the following details:\n\n` +
@@ -59,10 +64,8 @@ app.post("/send-email", async (req, res) => {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
-  // Process the reservation (e.g., store in database, etc.)
-
   // Send the confirmation email
-  await sendConfirmationEmail(email, name);
+  await sendConfirmationEmail(name, email, roomType, checkInDate, checkOutDate);
 
   // Respond with a success message
   res.status(200).json({
