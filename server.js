@@ -1,8 +1,8 @@
 import express from "express";
 import nodemailer from "nodemailer";
+import cors from "cors"; // Use ES module import here
 
 const app = express();
-const cors = require('cors');
 const port = 3000;
 
 // Read environment variables for email configuration
