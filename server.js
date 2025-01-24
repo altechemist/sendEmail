@@ -14,9 +14,11 @@ const emailPassword = process.env.VITE_EMAIL_PASSWORD;
 app.use(express.json());
 
 // Allow requests from localhost:5173 (your frontend)
-app.use(cors({
-  origin: 'http://localhost:5173'
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173, http://http://localhost:3001/",
+  })
+);
 
 // Create a transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
@@ -79,8 +81,7 @@ async function sendContactEmail(name, email, message) {
   }
 }
 
-
-      // Room reservation endpoint
+// Room reservation endpoint
 app.post("/send-email", async (req, res) => {
   const { name, email, roomType, checkInDate, checkOutDate } = req.body;
 
@@ -130,13 +131,13 @@ app.post("/send-contact-email", async (req, res) => {
     });
   } catch (error) {
     console.error("Error sending email:", error);
-    res.status(500).json({ error: "An error occurred while sending the email" });
+    res
+      .status(500)
+      .json({ error: "An error occurred while sending the email" });
   }
 });
 
-
-
-      // Start the server
+// Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
