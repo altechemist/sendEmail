@@ -69,12 +69,7 @@ async function sendContactEmail(name, email, message) {
       to: senderEmail, // recipient address
       subject: "Portfolio Message", // Subject line
       text: message,
-      html:
-        `<b>Hello ${name},</b><br><br>` +
-        `Your room reservation has been confirmed with the following details:<br><br>` +
-        `<b>Name:</b> ${name}<br><b>Email:</b> ${email}<br><b>Room Type:</b> ${roomType}<br>` +
-        `<b>Check-in Date:</b> ${checkInDate}<br><b>Check-out Date:</b> ${checkOutDate}<br><br>` +
-        `Thank you for choosing us!<br><br>Best regards,<br>Luxe Hotel`,
+      html: `<b>From:</b> ${name}<br><b>Email:</b> ${email}<br><br>${message}`,
     };
 
     const info = await transporter.sendMail(mailOptions);
